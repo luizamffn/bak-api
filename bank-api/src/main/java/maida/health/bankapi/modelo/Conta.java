@@ -3,14 +3,23 @@ package maida.health.bankapi.modelo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Conta {
 
 	private Long id;
 	private String number;
 	private BigDecimal balance;
 	private LocalDateTime openDate;
+
 	private Usuario user;
 	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
@@ -35,6 +44,8 @@ public class Conta {
 	public void setOpenDate(LocalDateTime openDate) {
 		this.openDate = openDate;
 	}
+	
+	@ManyToOne
 	public Usuario getUser() {
 		return user;
 	}

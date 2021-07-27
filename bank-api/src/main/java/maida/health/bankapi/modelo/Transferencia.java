@@ -11,13 +11,16 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Transferencia {
 	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private BigDecimal amount;
 	
+	@ManyToOne
 	private Conta sourceAccount;
+	
+	@ManyToOne
 	private Conta destinationAccount;
 	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
@@ -31,7 +34,6 @@ public class Transferencia {
 		this.amount = amount;
 	}
 	
-	@ManyToOne
 	public Conta getSourceAccount() {
 		return sourceAccount;
 	}
@@ -39,7 +41,6 @@ public class Transferencia {
 		this.sourceAccount = sourceAccount;
 	}
 	
-	@ManyToOne
 	public Conta getDestinationAccount() {
 		return destinationAccount;
 	}
@@ -47,5 +48,4 @@ public class Transferencia {
 		this.destinationAccount = destinationAccount;
 	}
 
-	
 }

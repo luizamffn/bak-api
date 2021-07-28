@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import maida.health.bankapi.controller.dto.ErroDto;
 import maida.health.bankapi.controller.dto.UsuarioDto;
+import maida.health.bankapi.controller.dto.mensagem.ErroDto;
 import maida.health.bankapi.controller.form.UsuarioForm;
 import maida.health.bankapi.modelo.Usuario;
 import maida.health.bankapi.repository.UsuarioRepository;

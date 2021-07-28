@@ -2,6 +2,7 @@ package maida.health.bankapi.controller.form;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -14,7 +15,7 @@ public class ContaForm {
 	@NotNull @NotEmpty
 	private String number;
 	
-	@NotNull
+	@NotNull @Min(value = 0)
 	private BigDecimal balance;
 	
 	public String getNumber() {

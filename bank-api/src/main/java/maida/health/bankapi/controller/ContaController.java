@@ -18,6 +18,8 @@ import maida.health.bankapi.config.security.TokenService;
 import maida.health.bankapi.controller.dto.ContaDto;
 import maida.health.bankapi.controller.dto.SaldoDto;
 import maida.health.bankapi.controller.dto.TransferenciaDto;
+import maida.health.bankapi.controller.dto.mensagem.AcessoNegadoDto;
+import maida.health.bankapi.controller.dto.mensagem.ErroDto;
 import maida.health.bankapi.controller.form.ContaForm;
 import maida.health.bankapi.controller.form.SaldoForm;
 import maida.health.bankapi.controller.form.TransferenciaForm;
@@ -46,16 +48,21 @@ public class ContaController {
 	
 	@PostMapping
 	@Transactional
-	public ResponseEntity<ContaDto> cadastrar(@RequestBody @Valid ContaForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<?> cadastrar(@RequestBody @Valid ContaForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriBuilder) {
 		Usuario usuariologado = retornarUsuarioLogado(token);
 		if(usuariologado != null) {
-			Conta conta = form.converter(contaRepository, usuariologado);
-			contaRepository.save(conta);
+			Conta contaExistente = contaRepository.findByNumber(form.getNumber());
+			if(contaExistente == null) {
+				Conta conta = form.converter(contaRepository, usuariologado);
+				contaRepository.save(conta);
+				
+				URI uri = uriBuilder.path("/accounts/").buildAndExpand(conta.getId()).toUri();
+				return ResponseEntity.created(uri).body(new ContaDto(conta));
+			}
 			
-			URI uri = uriBuilder.path("/accounts/").buildAndExpand(conta.getId()).toUri();
-			return ResponseEntity.created(uri).body(new ContaDto(conta));
+			return ResponseEntity.badRequest().body(new ErroDto("Já existe uma conta com o número informado."));
 		}
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.badRequest().body(new AcessoNegadoDto("Acesso negado"));
 	}
 	
 	@PostMapping("/transfer")

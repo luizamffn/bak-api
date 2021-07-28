@@ -3,8 +3,6 @@ package maida.health.bankapi.controller.form;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
-
 import maida.health.bankapi.modelo.Usuario;
 import maida.health.bankapi.repository.UsuarioRepository;
 

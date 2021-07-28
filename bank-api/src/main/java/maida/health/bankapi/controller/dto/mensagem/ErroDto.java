@@ -1,4 +1,4 @@
-package maida.health.bankapi.controller.dto;
+package maida.health.bankapi.controller.dto.mensagem;
 
 public class ErroDto {
 	private String erro;

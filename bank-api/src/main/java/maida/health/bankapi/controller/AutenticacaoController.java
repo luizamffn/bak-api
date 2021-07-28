@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import maida.health.bankapi.config.security.TokenService;
 import maida.health.bankapi.controller.dto.TokenDto;
+import maida.health.bankapi.controller.dto.mensagem.ErroDto;
 import maida.health.bankapi.controller.form.LoginForm;
 import maida.health.bankapi.modelo.Usuario;
 import maida.health.bankapi.repository.UsuarioRepository;
@@ -35,7 +36,7 @@ public class AutenticacaoController {
 	private UsuarioRepository usuarioRepository;
 	
 	@PostMapping
-	public ResponseEntity<TokenDto> autenticar(@RequestBody @Valid LoginForm form){
+	public ResponseEntity<?> autenticar(@RequestBody @Valid LoginForm form){
 		UsernamePasswordAuthenticationToken dadosLogin = form.converter();
 		
 		try {
@@ -47,7 +48,7 @@ public class AutenticacaoController {
 			return ResponseEntity.ok(new TokenDto(usuario.get().getName(), form.getEmail(), token));
 
 		} catch (AuthenticationException e) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.badRequest().body(new ErroDto("Usuário ou senha inválidos"));
 		}
 		
 	}

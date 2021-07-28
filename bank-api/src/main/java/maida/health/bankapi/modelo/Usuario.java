@@ -40,7 +40,17 @@ public class Usuario implements UserDetails{
 	    inverseJoinColumns = @JoinColumn(name = "perfil_id"))
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Perfil> perfis = new ArrayList<>();
+	
+	public Usuario() {
+		
+	}
 
+	public Usuario(String name, String email, String senha) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.senha = senha;
+	}
 	public Long getId() {
 		return id;
 	}

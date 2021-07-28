@@ -16,11 +16,23 @@ public class Conta {
 	private Long id;
 	private String number;
 	private BigDecimal balance;
-	private LocalDateTime openDate;
+	private LocalDateTime openDate = LocalDateTime.now();
 
 	@ManyToOne
 	private Usuario user;
 	
+	public Conta() {
+
+	}
+	
+	public Conta(String number, BigDecimal balance, Usuario user) {
+		this.number = number;
+		this.balance = balance;
+		this.user = user;
+	}
+
+
+
 	public Long getId() {
 		return id;
 	}

@@ -21,6 +21,17 @@ public class Transferencia {
 	@ManyToOne
 	private Conta destinationAccount;
 	
+	public Transferencia() {
+	}
+	
+	public Transferencia(BigDecimal amount, Conta sourceAccount, Conta destinationAccount) {
+		this.amount = amount;
+		this.sourceAccount = sourceAccount;
+		this.destinationAccount = destinationAccount;
+	}
+
+
+
 	public Long getId() {
 		return id;
 	}

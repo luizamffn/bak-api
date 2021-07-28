@@ -1,24 +1,30 @@
 package maida.health.bankapi.controller.dto;
 
 public class TokenDto {
+	private String name;
+	private String email;
 	private String token;
-	private String tipo;
-	
 
-	public TokenDto(String token, String tipo) {
+	public TokenDto(String name, String email, String token) {
+		this.name = name;
+		this.email = email;
 		this.token = token;
-		this.tipo = tipo;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
 
 	public String getToken() {
 		return token;
 	}
 
 
-	public String getTipo() {
-		return tipo;
-	}
+	
 
 
 }

@@ -10,14 +10,14 @@ public class TransferenciaDto {
 	private BigDecimal amount;
 	private String source_account_number;
 	private String destination_account_number;
-	private UsuarioDto user;
+	private UsuarioDto user_transfer;
 	
 	
 	public TransferenciaDto(Transferencia transferencia, Usuario usuariologado) {
 		this.amount = transferencia.getAmount();
 		this.source_account_number = transferencia.getSourceAccount().getNumber();
 		this.destination_account_number = transferencia.getDestinationAccount().getNumber();
-		this.user = new UsuarioDto(usuariologado);
+		this.user_transfer = new UsuarioDto(usuariologado);
 	}
 	
 	public BigDecimal getAmount() {
@@ -29,8 +29,8 @@ public class TransferenciaDto {
 	public String getDestination_account_number() {
 		return destination_account_number;
 	}
-	public UsuarioDto getUser() {
-		return user;
+	public UsuarioDto getUser_transfer() {
+		return user_transfer;
 	}
 	
 }

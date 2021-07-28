@@ -2,6 +2,7 @@ package maida.health.bankapi.controller.form;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -16,7 +17,7 @@ public class TransferenciaForm {
 	private String source_account_number;
 	@NotNull @NotEmpty
 	private String destination_account_number;
-	@NotNull
+	@NotNull @Min(value = 0)
 	private BigDecimal amount;
 	
 	public String getSource_account_number() {

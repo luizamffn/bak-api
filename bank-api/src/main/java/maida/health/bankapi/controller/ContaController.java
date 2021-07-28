@@ -1,6 +1,8 @@
 package maida.health.bankapi.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -18,7 +20,6 @@ import maida.health.bankapi.config.security.TokenService;
 import maida.health.bankapi.controller.dto.ContaDto;
 import maida.health.bankapi.controller.dto.SaldoDto;
 import maida.health.bankapi.controller.dto.TransferenciaDto;
-import maida.health.bankapi.controller.dto.mensagem.AcessoNegadoDto;
 import maida.health.bankapi.controller.dto.mensagem.ErroDto;
 import maida.health.bankapi.controller.form.ContaForm;
 import maida.health.bankapi.controller.form.SaldoForm;
@@ -49,48 +50,61 @@ public class ContaController {
 	@PostMapping
 	@Transactional
 	public ResponseEntity<?> cadastrar(@RequestBody @Valid ContaForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriBuilder) {
-		Usuario usuariologado = retornarUsuarioLogado(token);
-		if(usuariologado != null) {
-			Conta contaExistente = contaRepository.findByNumber(form.getNumber());
-			if(contaExistente == null) {
-				Conta conta = form.converter(contaRepository, usuariologado);
-				contaRepository.save(conta);
-				
-				URI uri = uriBuilder.path("/accounts/").buildAndExpand(conta.getId()).toUri();
-				return ResponseEntity.created(uri).body(new ContaDto(conta));
-			}
-			
-			return ResponseEntity.badRequest().body(new ErroDto("Já existe uma conta com o número informado."));
+		Conta contaExistente = contaRepository.findByNumber(form.getNumber());
+		if (contaExistente == null) {
+			Usuario usuariologado = retornarUsuarioLogado(token);
+			Conta conta = form.converter(contaRepository, usuariologado);
+			contaRepository.save(conta);
+
+			URI uri = uriBuilder.path("/accounts/").buildAndExpand(conta.getId()).toUri();
+			return ResponseEntity.created(uri).body(new ContaDto(conta));
 		}
-		return ResponseEntity.badRequest().body(new AcessoNegadoDto("Acesso negado"));
+
+		return ResponseEntity.badRequest().body(new ErroDto("Já existe uma conta com o número informado."));
 	}
 	
 	@PostMapping("/transfer")
 	@Transactional
-	public ResponseEntity<TransferenciaDto> Transferencia(@RequestBody @Valid TransferenciaForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<?> Transferencia(@RequestBody @Valid TransferenciaForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriBuilder) {
 		Usuario usuariologado = retornarUsuarioLogado(token);
-		if(usuariologado != null) {
-			Transferencia transferencia = form.converter(contaRepository, usuariologado);
-			transferenciaRepository.save(transferencia);
-			
-			URI uri = uriBuilder.path("/accounts/transfer").buildAndExpand(transferencia.getId()).toUri();
-			return ResponseEntity.created(uri).body(new TransferenciaDto(transferencia, usuariologado));
+
+		Transferencia transferencia = form.converter(contaRepository, usuariologado);
+		
+		List<ErroDto> erros = new ArrayList<>();
+		if(transferencia.getSourceAccount() == null) {
+			erros.add(new ErroDto("Conta de origem não encontrada!"));
+		}else if(transferencia.getSourceAccount().getBalance().doubleValue() < form.getAmount().doubleValue()) {
+			erros.add(new ErroDto("Saldo insuficiente na conta de origem!"));
 		}
 		
-		return ResponseEntity.notFound().build();
+		if(transferencia.getDestinationAccount() == null) {
+			erros.add(new ErroDto("Conta destino não encontrada!"));
+		}
+		
+		if(erros.size()> 0) {
+			return ResponseEntity.badRequest().body(erros);
+		}
+		
+		transferencia.getSourceAccount().setBalance(transferencia.getSourceAccount().getBalance().subtract(form.getAmount()));
+		transferenciaRepository.save(transferencia);
+
+		URI uri = uriBuilder.path("/accounts/transfer").buildAndExpand(transferencia.getId()).toUri();
+		return ResponseEntity.created(uri).body(new TransferenciaDto(transferencia, usuariologado));
 	}
 	
 	@PostMapping("/balance")
 	@Transactional
-	public ResponseEntity<SaldoDto> Transferencia(@RequestBody @Valid SaldoForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriBuilder) {
-		if(retornarUsuarioLogado(token) != null) {
-			Conta conta = form.retornarConta(contaRepository);
-			
-			URI uri = uriBuilder.path("/accounts/balance").buildAndExpand(conta.getId()).toUri();
-			return ResponseEntity.created(uri).body(new SaldoDto(conta));
+	public ResponseEntity<?> ExibirSaldo(@RequestBody @Valid SaldoForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriBuilder) {
+		Conta conta = form.retornarConta(contaRepository);
+
+		if (conta == null) {
+			return ResponseEntity.badRequest()
+					.body(new ErroDto("Conta de origem não encontrada para o usuário informado!"));
 		}
-		
-		return ResponseEntity.notFound().build();
+
+		URI uri = uriBuilder.path("/accounts/balance").buildAndExpand(conta.getId()).toUri();
+		return ResponseEntity.created(uri).body(new SaldoDto(conta));
+
 	}
 	
 	private Usuario retornarUsuarioLogado(String token) {

@@ -8,12 +8,12 @@ public class ContaDto {
 	
 	private String number;
 	private BigDecimal balance;
-	private UsuarioDto userDto;
+	private UsuarioDto user;
 	
 	public ContaDto(Conta conta) {
 		this.number = conta.getNumber();
 		this.balance = conta.getBalance();
-		this.userDto = new UsuarioDto(conta.getUser());
+		this.user = new UsuarioDto(conta.getUser());
 	}
 	
 	public String getNumber() {
@@ -23,8 +23,8 @@ public class ContaDto {
 		return balance;
 	}
 
-	public UsuarioDto getUserDto() {
-		return userDto;
+	public UsuarioDto getUser() {
+		return user;
 	}
 	
 }

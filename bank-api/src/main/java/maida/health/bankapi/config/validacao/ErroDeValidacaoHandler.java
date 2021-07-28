@@ -27,7 +27,19 @@ public class ErroDeValidacaoHandler {
 		List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 		fieldErrors.forEach(e -> {
 			String mensagem = messageSource.getMessage(e, LocaleContextHolder.getLocale());
-			ErroDeFormularioDto erro = new ErroDeFormularioDto(e.getField(), mensagem);
+			if(e.getCode().equals("NotEmpty")) {
+				mensagem = "O Campo " + e.getField() + " não pode ser vazio";
+			}else if (e.getCode().equals("NotNull")) {
+				mensagem = "O Campo " + e.getField() + " não pode ser nulo";
+			}else if (e.getCode().equals("Length")) {
+				mensagem = e.getField() + " muito curta";
+			}else if (e.getCode().equals("Email")) {
+				mensagem = "Email inválido";
+			}else if (e.getCode().equals("Min")) {
+				mensagem = "O Campo " + e.getField() + " deve ser maior ou igual a zero";
+			}
+			
+			ErroDeFormularioDto erro = new ErroDeFormularioDto(mensagem);
 			dto.add(erro);
 		});
 		

@@ -1,21 +1,16 @@
 package maida.health.bankapi.config.security;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import maida.health.bankapi.controller.dto.SaldoDto;
-import maida.health.bankapi.controller.dto.mensagem.AcessoNegadoDto;
 import maida.health.bankapi.modelo.Usuario;
 import maida.health.bankapi.repository.UsuarioRepository;
 
@@ -48,12 +43,11 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
 			autenticarCliente(token);
 		}
 		
-		System.out.println(request.getRequestURL());
 		try {
 			filterChain.doFilter(request, response);
 		} catch (Exception e) {
-			acessoNegado(response);
-			return;
+//			acessoNegado(response);
+//			return;
 		}
 		
 	}

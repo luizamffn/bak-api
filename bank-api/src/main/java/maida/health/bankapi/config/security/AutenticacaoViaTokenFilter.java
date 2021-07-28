@@ -46,8 +46,8 @@ public class AutenticacaoViaTokenFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} catch (Exception e) {
-//			acessoNegado(response);
-//			return;
+			acessoNegado(response);
+			return;
 		}
 		
 	}

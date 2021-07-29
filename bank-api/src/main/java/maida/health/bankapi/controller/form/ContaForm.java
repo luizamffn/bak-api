@@ -18,16 +18,23 @@ public class ContaForm {
 	@NotNull @Min(value = 0)
 	private BigDecimal balance;
 	
+	
 	public String getNumber() {
 		return number;
 	}
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
 	public BigDecimal getBalance() {
 		return balance;
 	}
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
+	}
+
 	public Conta converter(ContaRepository contaRepository, Usuario logado) {
 		return new Conta(number, balance, logado);
 	}
-	
-	
 	
 }

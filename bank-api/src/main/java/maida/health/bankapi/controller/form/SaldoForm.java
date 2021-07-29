@@ -1,5 +1,6 @@
 package maida.health.bankapi.controller.form;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import maida.health.bankapi.modelo.Conta;
@@ -7,7 +8,7 @@ import maida.health.bankapi.repository.ContaRepository;
 
 public class SaldoForm {
 	
-	@NotNull
+	@NotNull @NotEmpty
 	private String account_number;
 	
 	

@@ -102,8 +102,8 @@ public class ContaController {
 					.body(new ErroDto("Conta de origem não encontrada para o usuário informado!"));
 		}
 
-		URI uri = uriBuilder.path("/accounts/balance").buildAndExpand(conta.getId()).toUri();
-		return ResponseEntity.created(uri).body(new SaldoDto(conta));
+//		URI uri = uriBuilder.path("/accounts/balance").buildAndExpand(conta.getId()).toUri();
+		return ResponseEntity.ok(new SaldoDto(conta));
 
 	}
 	

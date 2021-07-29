@@ -34,7 +34,7 @@ public class UsuarioController {
 	public ResponseEntity<?> cadastrar(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder) {
 		Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(form.getEmail());
 		if (usuarioExistente.isPresent()) {
-			return ResponseEntity.ok(new ErroDto("Já existe um usuário com o email informado."));
+			return ResponseEntity.badRequest().body(new ErroDto("Já existe um usuário com o email informado."));
 		}
 		
 		Usuario usuario = form.converter(usuarioRepository);

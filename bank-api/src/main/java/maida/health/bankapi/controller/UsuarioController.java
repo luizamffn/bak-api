@@ -43,7 +43,7 @@ public class UsuarioController {
 		usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 		usuarioRepository.save(usuario);
 		
-		URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(usuario.getId()).toUri();
+		URI uri = uriBuilder.path("/user/{id}").buildAndExpand(usuario.getId()).toUri();
 		return ResponseEntity.created(uri).body(new UsuarioDto(usuario));
 	}
 
